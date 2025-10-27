@@ -25,6 +25,27 @@ To build:
 - **C++ compiler** that fully supports C++17 compatible with your platform:
     - GCC or LLVM/Clang (Linux/macOS)
     - Microsoft Visual C++ (MSVC) 2022 or later (Windows)
+- **GNU Bash** and **core utilities**
+  - *Included by default* on **Linux** and **macOS**
+  - On **Windows**, install via **[Cygwin](https://cygwin.com/)** — required to provide a Unix-like environment **and** tools like `cygpath`, which are needed for proper path translation
+
+> **NOTE:**
+> Required Cygwin packages:
+> `bash`, `coreutils`, `make`, `binutils`, `diffutils`, `gcc-g++`, `rsync`
+>
+> Install using [Cygwin Installer](https://cygwin.com/setup-x86_64.exe):
+> ```cmd
+> .\setup-x86_64.exe -q -P make,strip,diffutils,binutils,gcc-g++,rsync --site "http://mirrors.kernel.org/sourceware/cygwin/"
+> ```
+> The mirror in `--site` is specified for quiet mode.
+> You can choose another mirror or run the setup GUI once - after that, this will no longer be necessary.
+>
+> **Optional Cygwin packages** (needed for IDAPython):
+> `zip`, `unzip`, `swig`
+>
+> ```cmd
+> .\setup-x86_64.exe -q -P zip,unzip,swig
+> ```
 
 To use the SDK:
 
