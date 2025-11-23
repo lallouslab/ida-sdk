@@ -2,9 +2,9 @@ name: IDA SDK Build Test
 
 on:
   push:
-    branches: [ cmake ]
+    branches: [ cmake, pdb-auto-accept ]
   pull_request:
-    branches: [ cmake ]
+    branches: [ cmake, pdb-auto-accept ]
 
 jobs:
   build-windows:

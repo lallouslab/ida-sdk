@@ -809,12 +809,14 @@ static HRESULT remote_handler(pdb_ctx_t &pv, const pdbargs_t &args)
 //-------------------------------------------------------------------------
 static const cfgopt_t g_opts[] =
 {
-  CFGOPT_R ("PDB_REMOTE_PORT",    pdb_ctx_t, pdb_remote_port,    0, 65535),
-  CFGOPT_R ("PDB_REMOTE_PORT_64", pdb_ctx_t, pdb_remote_port_64, 0, 65535),
-  CFGOPT_QS("_NT_SYMBOL_PATH",    pdb_ctx_t, full_sympath,       true),
-  CFGOPT_QS("PDB_REMOTE_SERVER",  pdb_ctx_t, pdb_remote_server,  true),
-  CFGOPT_QS("PDB_REMOTE_PASSWD",  pdb_ctx_t, pdb_remote_passwd,  true),
-  CFGOPT_R ("PDB_NETWORK",        pdb_ctx_t, pdb_network,        PDB_NETWORK_OFF, PDB_NETWORK_ON),
+  CFGOPT_R ("PDB_REMOTE_PORT",          pdb_ctx_t, pdb_remote_port,          0, 65535),
+  CFGOPT_R ("PDB_REMOTE_PORT_64",       pdb_ctx_t, pdb_remote_port_64,       0, 65535),
+  CFGOPT_QS("_NT_SYMBOL_PATH",          pdb_ctx_t, full_sympath,             true),
+  CFGOPT_QS("PDB_REMOTE_SERVER",        pdb_ctx_t, pdb_remote_server,        true),
+  CFGOPT_QS("PDB_REMOTE_PASSWD",        pdb_ctx_t, pdb_remote_passwd,        true),
+  CFGOPT_R ("PDB_NETWORK",              pdb_ctx_t, pdb_network,              PDB_NETWORK_OFF, PDB_NETWORK_ON),
+  CFGOPT_B ("PDB_MSDIA_FALLBACK",       pdb_ctx_t, pdb_msdia_fallback,       0),
+  CFGOPT_B ("PDB_AUTO_ACCEPT_MISMATCH", pdb_ctx_t, pdb_auto_accept_mismatch, 0),
 };
 
 //----------------------------------------------------------------------
@@ -1283,6 +1285,8 @@ bool idaapi pdb_ctx_t::run(size_t _call_code)
   pdbargs.flags |= PDBFLG_LOAD_TYPES;
   if ( !(inf_get_filetype() != f_PE && !is_miniidb()) )
     pdbargs.flags |= PDBFLG_LOAD_NAMES;
+  if ( pdb_auto_accept_mismatch )
+    pdbargs.flags |= PDBFLG_AUTO_ACCEPT_MISMATCH;
 
   netnode penode(PE_NODE);
   penode.valobj(&pe, sizeof(pe));

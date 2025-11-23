@@ -691,7 +691,8 @@ static HRESULT check_and_load_pdb(
         IDiaDataSource *pSource,
         LPCOLESTR pdb_path,
         const pdb_signature_t &pdb_sign,
-        bool load_anyway)
+        bool load_anyway,
+        bool auto_accept_mismatch)
 {
   HRESULT hr = E_FAIL;
   if ( !load_anyway )
@@ -715,10 +716,18 @@ static HRESULT check_and_load_pdb(
     deb(IDA_DEBUG_DEBUGGER, "PDB: loadAndValidateDataFromPdb(\"%S\"): %s\n", pdb_path, pdberr(hr));
     if ( hr == E_PDB_INVALID_SIG || hr == E_PDB_INVALID_AGE )
     {
-      load_anyway = ask_yn(ASKBTN_NO,
-                           "HIDECANCEL\nICON WARNING\nAUTOHIDE NONE\n"
-                           "PDB signature and/or age does not match the input file.\n"
-                           "Do you want to load it anyway?") == ASKBTN_YES;
+      if ( auto_accept_mismatch )
+      {
+        load_anyway = true;
+        msg("PDB: Auto-accepting signature/age mismatch for %S\n", pdb_path);
+      }
+      else
+      {
+        load_anyway = ask_yn(ASKBTN_NO,
+                             "HIDECANCEL\nICON WARNING\nAUTOHIDE NONE\n"
+                             "PDB signature and/or age does not match the input file.\n"
+                             "Do you want to load it anyway?") == ASKBTN_YES;
+      }
     }
   }
   if ( load_anyway )
@@ -906,7 +915,8 @@ HRESULT pdb_session_t::open_session(const pdbargs_t &pdbargs)
     utf8_utf16(&wpdb_path, pdbargs.pdb_path.c_str());
     bool force_load = (pdbargs.flags & (PDBFLG_LOAD_TYPES|PDBFLG_EFD)) != 0
                    && (pdbargs.flags & PDBFLG_LOAD_NAMES) == 0;
-    hr = check_and_load_pdb(pSource, wpdb_path.c_str(), pdbargs.pdb_sign, force_load);
+    bool auto_accept = (pdbargs.flags & PDBFLG_AUTO_ACCEPT_MISMATCH) != 0;
+    hr = check_and_load_pdb(pSource, wpdb_path.c_str(), pdbargs.pdb_sign, force_load, auto_accept);
     if ( hr == E_PDB_INVALID_SIG || hr == E_PDB_INVALID_AGE ) // Mismatching PDB
       goto fail;
     pdb_loaded = (hr == S_OK);

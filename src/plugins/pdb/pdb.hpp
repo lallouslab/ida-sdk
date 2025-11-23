@@ -53,12 +53,13 @@ struct pdbargs_t
   ea_t loaded_base;
   void *user_data;
   uint32 flags;
-#define PDBFLG_DBG_MODULE  0x0001
-#define PDBFLG_LOAD_TYPES  0x0002
-#define PDBFLG_EFD         0x0004
-#define PDBFLG_COFF_FILE   0x0008
-#define PDBFLG_LOAD_NAMES  0x0010
-#define PDBFLG_USE_HTTP    0x0100
+#define PDBFLG_DBG_MODULE           0x0001
+#define PDBFLG_LOAD_TYPES           0x0002
+#define PDBFLG_EFD                  0x0004
+#define PDBFLG_COFF_FILE            0x0008
+#define PDBFLG_LOAD_NAMES           0x0010
+#define PDBFLG_USE_HTTP             0x0100
+#define PDBFLG_AUTO_ACCEPT_MISMATCH 0x0200
 
   pdbargs_t(void)
     : loaded_base(BADADDR),
@@ -100,6 +101,8 @@ struct pdb_ctx_t : public plugmod_t, public event_listener_t
 #define PDB_NETWORK_PE  1   // local directories search for COFF, full search for PE
 #define PDB_NETWORK_ON  2   // no restrictions
   uint pdb_network = PDB_NETWORK_PE;
+  bool pdb_msdia_fallback = false;  // Config file option (command-line takes precedence)
+  bool pdb_auto_accept_mismatch = false;
   bool use_http(bool is_pe) const
   {
     bool ok = pdb_network == PDB_NETWORK_PE && is_pe
