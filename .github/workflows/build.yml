@@ -46,7 +46,21 @@ jobs:
       working-directory: src
       run: cmake -B build -G "Visual Studio 17 2022" -A x64
 
+    - name: Check if Qt6 is cached
+      id: check-qt
+      working-directory: src
+      shell: bash
+      run: |
+        if [ -f "build/qt-install/lib/cmake/Qt6/Qt6Config.cmake" ]; then
+          echo "Qt6 found in cache"
+          echo "qt_cached=true" >> $GITHUB_OUTPUT
+        else
+          echo "Qt6 not found, will build"
+          echo "qt_cached=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Build Qt6 (if not cached)
+      if: steps.check-qt.outputs.qt_cached != 'true'
       working-directory: src
       run: cmake --build build --target build_qt --config Release
       continue-on-error: true
@@ -132,7 +146,20 @@ jobs:
       working-directory: src
       run: cmake -B build -G Ninja
 
+    - name: Check if Qt6 is cached
+      id: check-qt
+      working-directory: src
+      run: |
+        if [ -f "build/qt-install/lib/cmake/Qt6/Qt6Config.cmake" ]; then
+          echo "Qt6 found in cache"
+          echo "qt_cached=true" >> $GITHUB_OUTPUT
+        else
+          echo "Qt6 not found, will build"
+          echo "qt_cached=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Build Qt6 (if not cached)
+      if: steps.check-qt.outputs.qt_cached != 'true'
       working-directory: src
       run: cmake --build build --target build_qt
       continue-on-error: true
@@ -216,7 +243,20 @@ jobs:
       working-directory: src
       run: cmake -B build -G Ninja
 
+    - name: Check if Qt6 is cached
+      id: check-qt
+      working-directory: src
+      run: |
+        if [ -f "build/qt-install/lib/cmake/Qt6/Qt6Config.cmake" ]; then
+          echo "Qt6 found in cache"
+          echo "qt_cached=true" >> $GITHUB_OUTPUT
+        else
+          echo "Qt6 not found, will build"
+          echo "qt_cached=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Build Qt6 (if not cached)
+      if: steps.check-qt.outputs.qt_cached != 'true'
       working-directory: src
       run: cmake --build build --target build_qt
       continue-on-error: true
