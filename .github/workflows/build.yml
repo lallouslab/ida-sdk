@@ -38,7 +38,7 @@ jobs:
         path: |
           src/build/qt-install
           src/build/qt-src
-        key: ${{ runner.os }}-qt6-6.8.2-qtnamespace
+        key: ${{ runner.os }}-qt6-6.8.2-qtnamespace-v3
         restore-keys: |
           ${{ runner.os }}-qt6-
 
@@ -121,7 +121,11 @@ jobs:
     - name: Install build dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential cmake ninja-build
+        sudo apt-get install -y build-essential cmake ninja-build \
+          libgl1-mesa-dev libxcb-xinerama0-dev libxkbcommon-dev \
+          libxcb-cursor-dev libxcb-icccm4-dev libxcb-image0-dev \
+          libxcb-keysyms1-dev libxcb-randr0-dev libxcb-render-util0-dev \
+          libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev
 
     - name: Cache Qt6 build
       uses: actions/cache@v4
@@ -129,7 +133,7 @@ jobs:
         path: |
           src/build/qt-install
           src/build/qt-src
-        key: ${{ runner.os }}-qt6-6.8.2-qtnamespace
+        key: ${{ runner.os }}-qt6-6.8.2-qtnamespace-v3
         restore-keys: |
           ${{ runner.os }}-qt6-
 
@@ -217,7 +221,7 @@ jobs:
         path: |
           src/build/qt-install
           src/build/qt-src
-        key: ${{ runner.os }}-qt6-6.8.2-qtnamespace
+        key: ${{ runner.os }}-qt6-6.8.2-qtnamespace-v3
         restore-keys: |
           ${{ runner.os }}-qt6-
 
