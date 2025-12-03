@@ -1,8 +1,9 @@
 # ============================================================================
 # Windows Debugger Stub (win32_stub.so)
-# Builds on ALL platforms for remote debugging support
+# Builds on Windows and Linux (macOS has RTTI linkage issues with SDK libs)
 # ============================================================================
 
+if(NOT APPLE)
 ida_add_plugin(win32_stub
     SOURCES
         win32_stub.cpp
@@ -40,6 +41,7 @@ if(MSVC)
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
     )
 endif()
+endif() # NOT APPLE
 
 # ============================================================================
 # Windows Local Debugger Plugin (win32_user.dll)

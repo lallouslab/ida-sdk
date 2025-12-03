@@ -159,9 +159,10 @@ endif() # IDA_PLATFORM_NAME STREQUAL "linux"
 
 # ============================================================================
 # Linux Remote Debugging Stub (linux_stub.so/.dll)
-# Builds on ALL platforms for remote debugging support
+# Builds on Windows and Linux (macOS has RTTI linkage issues with SDK libs)
 # ============================================================================
 
+if(NOT APPLE)
 ida_add_plugin(linux_stub
     SOURCES
         linux_stub.cpp
@@ -199,12 +200,14 @@ if(MSVC)
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
     )
 endif()
+endif() # NOT APPLE
 
 # ============================================================================
 # ARM Linux Remote Debugging Stub (armlinux_stub.so/.dll)
-# Builds on ALL platforms for remote ARM Linux debugging support
+# Builds on Windows and Linux (macOS has RTTI linkage issues with SDK libs)
 # ============================================================================
 
+if(NOT APPLE)
 ida_add_plugin(armlinux_stub
     SOURCES
         armlinux_stub.cpp
@@ -244,3 +247,4 @@ if(MSVC)
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
     )
 endif()
+endif() # NOT APPLE
